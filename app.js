@@ -7,12 +7,18 @@ var bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var client = require('./routes/client');
+var employee = require('./routes/employee');
+var resource = require('./routes/resource');
+var project = require('./routes/project');
+var phase = require('./routes/phase');
+var task = require('./routes/task');
 
 var app = express();
 
 //Set up mongoose connection
 var mongoose = require('mongoose');
-var mongoDB = 'mongodb://127.0.0.1:27017';
+var mongoDB = 'mongodb://127.0.0.1:27017/projectManagement';
 mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
@@ -30,6 +36,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/client', client);
+app.use('/employee', employee);
+app.use('/resource', resource);
+app.use('/project', project);
+app.use('/phase', phase);
+app.use('/task', task);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

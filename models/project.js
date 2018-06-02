@@ -9,6 +9,7 @@ var ProjectSchema = new Schema(
         start_date: {type: Date, required: true},
         deadline: {type: Date, required: true},
         budget: {type: Number},
+        percentage_complete: {type: Number},
         client: {type: Schema.ObjectId, ref: 'Client', required: true},
         employees: [{type: Schema.ObjectId, ref: 'Employee', required: true}],
         resources: [{type: Schema.ObjectId, ref: 'Resource'}]

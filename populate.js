@@ -37,7 +37,8 @@ function projectCreate(cb) {
         type:'IT',
         start_date:'2017-06-06',
         deadline:'2018-02-06',
-        budget:'',
+        budget:45000,
+        percentage_complete:40.5,
         client: clients[0],
         employees: employees[0],
         resources: resources[0]
@@ -102,6 +103,8 @@ function clientCreate(cb) {
         {
             name: 'WHO',
             type: 'Organization',
+            phone: '0729375832',
+            email: 'who@gmail.com',
             username: 'WHO2018',
             password: 'who123'
         });
