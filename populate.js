@@ -39,7 +39,7 @@ function projectCreate(cb) {
         deadline:'2018-02-06',
         budget:45000,
         percentage_complete:40.5,
-        client: clients[0],
+        clients: clients[0],
         employees: employees[0],
         resources: resources[0]
     });
@@ -62,6 +62,8 @@ function employeeCreate(cb) {
             first_name: 'sanura',
             last_name: 'wijayarathne',
             date_of_birth: '',
+            phone: '0771234563',
+            email: 'sanura@gmail.com',
             type: 'Dev',
             status: 'Available',
             username: 'sanuwijay94',

@@ -7,6 +7,8 @@ var EmployeeSchema = new Schema(
         first_name: {type: String, required: true},
         last_name: {type: String, required: true},
         date_of_birth: {type: Date},
+        phone: {type: String, required: true},
+        email: {type: String},
         type: {type: String, enum: ['Dev', 'QA', 'BA', 'PM'], required: true},
         status: {type: String, enum: ['Available', 'Not-Available'], default: 'Available', required: true},
         username: {type: String, required: true, index: { unique: true }},

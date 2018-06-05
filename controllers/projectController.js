@@ -2,12 +2,32 @@ var Project = require('../models/project');
 
 // Display list of all Projects.
 exports.project_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Project list');
+    Project.find({}, '_id clients employees resources name type start_date deadline budget percentage_complete', function (err, result) {
+        if (err) {
+            return res.json({
+                message: "Unable to get all projects",
+                error: err
+            });
+        }
+        else {
+            return res.json(result);
+        }
+    }).populate('clients employees resources');
 };
 
 // Display detail page for a specific Projects.
 exports.project_detail = function(req, res) {
-    res.send('NOT IMPLEMENTED: Project detail: ' + req.params.id);
+    Project.findById({'_id': req.params.id}, '_id clients employees resources name type start_date deadline budget percentage_complete', function (err, result) {
+        if (err) {
+            return res.json({
+                message: "Unable to get the project",
+                error: err
+            });
+        }
+        else {
+            return res.json(result);
+        }
+    }).populate('clients employees resources');
 };
 
 // Display Project create form on GET.

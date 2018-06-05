@@ -2,12 +2,32 @@ var Task = require('../models/task');
 
 // Display list of all Task.
 exports.task_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Task list');
+    Task.find({}, '_id description employee phase status', function (err, result) {
+        if (err) {
+            return res.json({
+                message: "Unable to get all task",
+                error: err
+            });
+        }
+        else {
+            return res.json(result);
+        }
+    }).populate('employee phase');
 };
 
 // Display detail page for a specific Task.
 exports.task_detail = function(req, res) {
-    res.send('NOT IMPLEMENTED: Task detail: ' + req.params.id);
+    Task.findById({'_id': req.params.id}, '_id description employee phase status', function (err, result) {
+        if (err) {
+            return res.json({
+                message: "Unable to get the task",
+                error: err
+            });
+        }
+        else {
+            return res.json(result);
+        }
+    }).populate('employee phase');
 };
 
 // Display Task create form on GET.

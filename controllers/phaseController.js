@@ -2,12 +2,32 @@ var Phase = require('../models/phase');
 
 // Display list of all Phase.
 exports.phase_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Phase list');
+    Phase.find({}, '_id name start_date end_date project', function (err, result) {
+        if (err) {
+            return res.json({
+                message: "Unable to get all phases",
+                error: err
+            });
+        }
+        else {
+            return res.json(result);
+        }
+    }).populate('project');
 };
 
 // Display detail page for a specific Phase.
 exports.phase_detail = function(req, res) {
-    res.send('NOT IMPLEMENTED: Phase detail: ' + req.params.id);
+    Phase.findById({'_id': req.params.id}, '_id name start_date end_date project', function (err, result) {
+        if (err) {
+            return res.json({
+                message: "Unable to get the phase",
+                error: err
+            });
+        }
+        else {
+            return res.json(result);
+        }
+    }).populate('project');
 };
 
 // Display Phase create form on GET.
