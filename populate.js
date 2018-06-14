@@ -39,9 +39,9 @@ function projectCreate(cb) {
         deadline:'2018-02-06',
         budget:45000,
         percentage_complete:40.5,
-        clients: clients[0],
-        employees: employees[0],
-        resources: resources[0]
+        client: clients[0],
+        employees: [employees[0]],
+        resources: [resources[0]]
     });
 
     project.save( function (err)
@@ -57,8 +57,7 @@ function projectCreate(cb) {
 }
 
 function employeeCreate(cb) {
-    var employee = new Employee(
-        {
+    var employee = new Employee({
             first_name: 'sanura',
             last_name: 'wijayarathne',
             date_of_birth: '',
@@ -82,8 +81,7 @@ function employeeCreate(cb) {
 }
 
 function resourceCreate(cb) {
-    var resource = new Resource(
-        {
+    var resource = new Resource({
             name: 'server',
             type: 'facilities',
             status: 'Available'
@@ -101,8 +99,7 @@ function resourceCreate(cb) {
 
 
 function clientCreate(cb) {
-    var client = new Client(
-        {
+    var client = new Client({
             name: 'WHO',
             type: 'Organization',
             phone: '0729375832',
@@ -123,8 +120,7 @@ function clientCreate(cb) {
 
 
 function phaseCreate(cb) {
-    var phase = new Phase(
-        {
+    var phase = new Phase({
             name: 'Requirement gathering',
             start_date: '2017-06-06',
             end_date: '',
@@ -143,8 +139,7 @@ function phaseCreate(cb) {
 
 
 function taskCreate(cb) {
-    var task = new Task(
-        {
+    var task = new Task({
             description: 'Create Models ',
             employee: employees[0],
             phase: phases[0],
@@ -181,12 +176,12 @@ function createEmployeeClientResource(cb) {
 
 function createProject(cb) {
     async.parallel([
-            function(callback) {
-                projectCreate(callback);
-            }
-        ],
-        // optional callback
-        cb);
+        function(callback) {
+            projectCreate(callback);
+        }
+    ],
+    // optional callback
+    cb);
 }
 
 function createBookPhase(cb) {

@@ -1,4 +1,7 @@
-var Phase = require('../models/phase');
+const Phase = require('../models/phase');
+const Task = require('../models/task');
+const { validate } = require('indicative');
+
 
 // Display list of all Phase.
 exports.phase_list = function(req, res) {
@@ -15,6 +18,7 @@ exports.phase_list = function(req, res) {
     }).populate('project');
 };
 
+
 // Display detail page for a specific Phase.
 exports.phase_detail = function(req, res) {
     Phase.findById({'_id': req.params.id}, '_id name start_date end_date project', function (err, result) {
@@ -30,32 +34,109 @@ exports.phase_detail = function(req, res) {
     }).populate('project');
 };
 
-// Display Phase create form on GET.
-exports.phase_create_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Phase create GET');
-};
 
-// Handle Phase create on POST.
+// Phase create on POST.
 exports.phase_create_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Phase create POST');
+    const data ={
+        name: req.body.name,
+        start_date: req.body.start_date,
+        end_date: req.body.end_date,
+        project: req.body.project
+    };
+
+    const rules = {
+        name: 'required',
+        start_date: 'required|date',
+        end_date: 'date',
+        project: 'required|alpha_numeric'
+    };
+
+    validate(data, rules)
+        .then(() => {
+            const phase = new Phase({
+                name: req.body.name,
+                start_date: req.body.start_date,
+                end_date: req.body.end_date,
+                project: req.body.project
+            });
+            phase.save(function (err) {
+                if (err) {
+                    return res.json({
+                        message: "Unable to Create Task",
+                        error: err
+                    });
+                }
+                return res.json({
+                    message: "Created Successfully"
+                });
+            });
+        })
+        .catch((errors) => {
+            return res.json(errors);
+        });
 };
 
-// Display Phase delete form on GET.
-exports.phase_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Phase delete GET');
-};
 
-// Handle Phase delete on POST.
+// Phase delete on DELETE.
 exports.phase_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Phase delete POST');
+    Phase.findByIdAndDelete(req.params.id, function (err, result) {
+        if (err) {
+            return res.json({
+                message: "Unable to Delete Phase",
+                error: err
+            });
+        }
+        else{
+            // delete tasks of the phase specified by the passed phase Id
+            Task.deleteMany({'phase': req.params.id}, function (err, result) {
+                if (err) {
+                    return res.json({
+                        message: "Unable to Delete Task",
+                        error: err
+                    });
+                }
+            });
+            return res.json({
+                message: "Deleted Successfully",
+                result: result
+            });
+        }
+    });
 };
 
-// Display Phase update form on GET.
-exports.phase_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Phase update GET');
-};
 
-// Handle Phase update on POST.
+// Phase update on PATCH.
 exports.phase_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Phase update POST');
+    const data ={
+        name: req.body.name,
+        start_date: req.body.start_date,
+        end_date: req.body.end_date,
+        project: req.body.project
+    };
+
+    const rules = {
+        name: 'required',
+        start_date: 'required|date',
+        end_date: 'date',
+        project: 'required|alpha_numeric'
+    };
+
+    validate(data, rules)
+        .then(() => {
+            Phase.findByIdAndUpdate(req.params.id, req.body, function (err, result) {
+                if (err) {
+                    return res.json({
+                        message: "Unable to Update Task",
+                        error: err
+                    });
+                }
+                return res.json({
+                    message: "Updated Successfully",
+                    result: result
+                });
+            });
+        })
+        .catch((errors) => {
+            return res.json(errors);
+        });
 };

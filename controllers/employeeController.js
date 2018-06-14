@@ -1,8 +1,7 @@
 const Employee = require('../models/employee');
-const mongoose = require('mongoose');
-const mongoDB = 'mongodb://127.0.0.1:27017/projectManagement';
+const Project = require('../models/project');
+const employeeMiddleware = require('../middleware/employee');
 const { validate } = require('indicative');
-
 
 // Display list of all Employee.
 exports.employee_list = function(req, res) {
@@ -36,17 +35,8 @@ exports.employee_detail = function(req, res) {
 };
 
 
-// Display Employee create form on GET.
-exports.employee_create_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Employee create POST');
-};
-
-// Handle Employee create on POST.
+// Employee create on POST.
 exports.employee_create_post = function(req, res) {
-    mongoose.connect(mongoDB);
-    mongoose.Promise = global.Promise;
-    mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
     const data ={
         first_name: req.body.first_name,
         last_name: req.body.last_name,
@@ -65,16 +55,15 @@ exports.employee_create_post = function(req, res) {
         date_of_birth: 'date',
         phone: 'required',
         email: 'email',
-        type: 'required',
-        status: 'required',
+        type: 'required|in:Dev,QA,BA,PM',
+        status: 'required|in:Available,Not-Available',
         username: 'required',
         password: 'required|min:4|max:40'
     };
 
     validate(data, rules)
         .then(() => {
-            const employee = new Employee(
-            {
+            const employee = new Employee({
                 first_name: req.body.first_name,
                 last_name: req.body.last_name,
                 date_of_birth: req.body.date_of_birth,
@@ -87,38 +76,95 @@ exports.employee_create_post = function(req, res) {
             });
             employee.save(function (err) {
                 if (err) {
-                    return res.json({err});
+                    return res.json({
+                        message: "Unable to Create Client",
+                        error: err
+                    });
                 }
-                return res.json(employee);
+                return res.json({
+                    message: "Created Successfully",
+                    result: req.body
+                });
             });
         })
         .catch((errors) => {
-            return res.json({errors});
+            return res.json(errors);
         });
-
-    mongoose.connection.close();
 };
 
 
-// Display Employee delete form on GET.
-exports.employee_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Employee delete GET');
-};
-
-
-// Handle Project delete on POST.
+// Project delete on DELETE.
 exports.employee_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Employee delete POST');
+    Employee.findByIdAndDelete(req.params.id, function (err, result) {
+        if (err) {
+            return res.json({
+                message: "Unable to Delete Employee",
+                error: err
+            });
+        }
+        //getting all the projects of employee with the passed employee Id
+        employeeMiddleware.projectsOfEmployee(req.params.id, function(projects) {
+            if (err) {
+                return res.json({
+                    message: "Unable to Delete Project",
+                    error: err
+                });
+            }
+            //delete the employee Id from all the project
+            for(let i=0; i<projects.length; i++) {
+                let newEmployeeArray = employeeMiddleware.deleteEmployeeFromProject(projects[i], req.params.id);
+                return res.json({
+                    message: "Deleted Successfully",
+                    result: [newEmployeeArray]
+                });
+            }
+        });
+    });
 };
 
 
-// Display Employee update form on GET.
-exports.employee_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Employee update GET');
-};
-
-
-// Handle Employee update on POST.
+// Employee update on PATCH.
 exports.employee_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Employee update POST');
+    const data ={
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        date_of_birth: req.body.date_of_birth,
+        phone: req.body.phone,
+        email: req.body.email,
+        type: req.body.type,
+        status: req.body.status,
+        username: req.body.username,
+        password: req.body.password
+    };
+
+    const rules = {
+        first_name: 'required',
+        last_name: 'required',
+        date_of_birth: 'date',
+        phone: 'required',
+        email: 'email',
+        type: 'required|in:Dev,QA,BA,PM',
+        status: 'required|in:Available,Not-Available',
+        username: 'required',
+        password: 'required|min:4|max:40'
+    };
+
+    validate(data, rules)
+        .then(() => {
+            Employee.findByIdAndUpdate(req.params.id, req.body, function (err, result) {
+                if (err) {
+                    return res.json({
+                        message: "Unable to update Client",
+                        error: err
+                    });
+                }
+                return res.json({
+                    message: "Updated Successfully",
+                    result: result
+                });
+            });
+        })
+        .catch((errors) => {
+            return res.json(errors);
+        });
 };

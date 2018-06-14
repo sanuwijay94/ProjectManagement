@@ -1,4 +1,6 @@
-var Task = require('../models/task');
+const Task = require('../models/task');
+const { validate } = require('indicative');
+
 
 // Display list of all Task.
 exports.task_list = function(req, res) {
@@ -15,6 +17,7 @@ exports.task_list = function(req, res) {
     }).populate('employee phase');
 };
 
+
 // Display detail page for a specific Task.
 exports.task_detail = function(req, res) {
     Task.findById({'_id': req.params.id}, '_id description employee phase status', function (err, result) {
@@ -30,32 +33,101 @@ exports.task_detail = function(req, res) {
     }).populate('employee phase');
 };
 
-// Display Task create form on GET.
-exports.task_create_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Task create GET');
-};
 
-// Handle Task create on POST.
+// Task create on POST.
 exports.task_create_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Task create POST');
+    const data ={
+        description: req.body.description,
+        employee: req.body.employee,
+        phase: req.body.phase,
+        status: req.body.status
+    };
+
+    const rules = {
+        description: 'required',
+        employee: 'alpha_numeric',
+        phase: 'required|alpha_numeric',
+        status: 'required|in:on-going,completed'
+    };
+
+    validate(data, rules)
+        .then(() => {
+            const task = new Task({
+                description: req.body.description,
+                employee: req.body.employee,
+                phase: req.body.phase,
+                status: req.body.status
+            });
+            task.save(function (err) {
+                if (err) {
+                    return res.json({
+                        message: "Unable to Create Task",
+                        error: err
+                    });
+                }
+                return res.json({
+                    message: "Created Successfully",
+                    result: task
+                });
+            });
+        })
+        .catch((errors) => {
+            return res.json(errors);
+        });
 };
 
-// Display Task delete form on GET.
-exports.task_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Task delete GET');
-};
 
-// Handle Task delete on POST.
+// Task delete on DELETE.
 exports.task_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Task delete POST');
+    Task.findByIdAndDelete(req.params.id, function (err, result) {
+        if (err) {
+            return res.json({
+                message: "Unable to Delete Task",
+                error: err
+            });
+        }
+        else{
+            return res.json({
+                message: "Deleted Successfully",
+                result: result
+            });
+        }
+    });
 };
 
-// Display Task update form on GET.
-exports.task_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Task update GET');
-};
 
-// Handle Task update on POST.
+// Task update on PATCH.
 exports.task_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Task update POST');
+    const data ={
+        description: req.body.description,
+        employee: req.body.employee,
+        phase: req.body.phase,
+        status: req.body.status
+    };
+
+    const rules = {
+        description: 'required',
+        employee: 'alpha_numeric',
+        phase: 'required|alpha_numeric',
+        status: 'required|in:on-going,completed'
+    };
+
+    validate(data, rules)
+        .then(() => {
+            Task.findByIdAndUpdate(req.params.id, req.body, function (err, result) {
+                if (err) {
+                    return res.json({
+                        message: "Unable to Update Task",
+                        error: err
+                    });
+                }
+                return res.json({
+                    message: "Updated Successfully",
+                    result: result
+                });
+            });
+        })
+        .catch((errors) => {
+            return res.json(errors);
+        });
 };

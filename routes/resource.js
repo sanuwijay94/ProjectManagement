@@ -6,23 +6,14 @@ var resource = require('../controllers/resourceController');
 
 /// Resource ROUTES ///
 
-// GET request for creating a Resource.
-router.get('/create', resource.resource_create_get);
-
 // POST request for creating Resource.
 router.post('/create', resource.resource_create_post);
 
-// GET request to delete Resource.
-router.get('/:id/delete', resource.resource_delete_get);
+// DELETE request to delete Resource.
+router.delete('/:id/delete', resource.resource_delete_post);
 
-// POST request to delete Resource.
-router.post('/:id/delete', resource.resource_delete_post);
-
-// GET request to update Resource.
-router.get('/:id/update', resource.resource_update_get);
-
-// POST request to update Resource.
-router.post('/:id/update', resource.resource_update_post);
+// PATCH request to update Resource.
+router.patch('/:id/update', resource.resource_update_post);
 
 // GET request for one Resource.
 router.get('/:id', resource.resource_detail);

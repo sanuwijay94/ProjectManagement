@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 var TaskSchema = new Schema(
     {
         description: {type: String, required: true},
-        employee: {type: Schema.ObjectId, ref: 'Employee', required: true},
+        employee: {type: Schema.ObjectId, ref: 'Employee'},
         phase: {type: Schema.ObjectId, ref: 'Phase', required: true},
         status: {type: String, enum:['on-going', 'completed'], required: true}
     }

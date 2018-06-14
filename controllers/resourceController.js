@@ -1,6 +1,5 @@
 const Resource = require('../models/resource');
-const mongoose = require('mongoose');
-const mongoDB = 'mongodb://127.0.0.1:27017/projectManagement';
+const resourceMiddleware = require('../middleware/resource');
 const { validate } = require('indicative');
 
 
@@ -36,18 +35,8 @@ exports.resource_detail = function(req, res) {
 };
 
 
-// Display Resource create form on GET.
-exports.resource_create_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Resource create GET');
-};
-
-
-// Handle Resource create on POST.
+// Resource create on POST.
 exports.resource_create_post = function(req, res) {
-    mongoose.connect(mongoDB);
-    mongoose.Promise = global.Promise;
-    mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
     const data ={
         name: req.body.name,
         type: req.body.type,
@@ -57,51 +46,93 @@ exports.resource_create_post = function(req, res) {
     const rules = {
         name: 'required',
         type: 'required',
-        status: 'required'
+        status: 'required|in:Available,Not-Available'
     };
 
     validate(data, rules)
         .then(() => {
-            const resource = new Resource(
-                {
-                    name: req.body.name,
-                    type: req.body.type,
-                    status: req.body.status
-                });
+            const resource = new Resource({
+                name: req.body.name,
+                type: req.body.type,
+                status: req.body.status
+            });
             resource.save(function (err) {
                 if (err) {
-                    return res.json({err});
+                    return res.json({
+                        message: "Unable to Create Project",
+                        error: err
+                    });
                 }
-                return res.json(resource);
+                return res.json({
+                    message: "Created Successfully",
+                    result: resource
+                });
             });
         })
         .catch((errors) => {
-            return res.json({errors});
+            return res.json(errors);
         });
-
-    mongoose.connection.close();
 };
 
 
-// Display Resource delete form on GET.
-exports.resource_delete_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Resource delete GET');
-};
-
-
-// Handle Resource delete on POST.
+// Resource delete on DELETE.
 exports.resource_delete_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Resource delete POST');
+    Resource.findByIdAndDelete(req.params.id, function (err, result) {
+        if (err) {
+            return res.json({
+                message: "Unable to Delete Resource",
+                error: err
+            });
+        }
+        //getting all the projects of resources
+        resourceMiddleware.projectsOfResource(req.params.id, function(projects) {
+            if (err) {
+                return res.json({
+                    message: "Unable to Delete Project",
+                    error: err
+                });
+            }
+            // deleting resources from project
+            let newResourceArray = resourceMiddleware.deleteResourceFromProject(projects, req.params.id);
+            return res.json({
+                message: "Deleted Successfully",
+                result: [newResourceArray]
+            });
+        });
+    });
 };
 
 
-// Display Client update form on GET.
-exports.resource_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Resource update GET');
-};
-
-
-// Handle Client update on POST.
+// Client update on PATCH.
 exports.resource_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Resource update POST');
+    const data ={
+        name: req.body.name,
+        type: req.body.type,
+        status: req.body.status
+    };
+
+    const rules = {
+        name: 'required',
+        type: 'required|in:equipment,facilities,funding',
+        status: 'required|in:Available,Not-Available'
+    };
+
+    validate(data, rules)
+        .then(() => {
+            Resource.findByIdAndUpdate(req.params.id, req.body, function (err, result) {
+                if (err) {
+                    return res.json({
+                        message: "Unable to Update Project",
+                        error: err
+                    });
+                }
+                return res.json({
+                    message: "Updated Successfully",
+                    result: result
+                });
+            });
+        })
+        .catch((errors) => {
+            return res.json(errors);
+        });
 };

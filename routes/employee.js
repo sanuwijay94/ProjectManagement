@@ -6,24 +6,14 @@ var employee = require('../controllers/employeeController');
 
 /// Employee ROUTES ///
 
-
-// GET request for creating a Employee.
-router.get('/create', employee.employee_create_get);
-
 // POST request for creating Employee.
 router.post('/create', employee.employee_create_post);
 
-// GET request to delete Employee.
-router.get('/:id/delete', employee.employee_delete_get);
+// DELETE request to delete Employee.
+router.delete('/:id/delete', employee.employee_delete_post);
 
-// POST request to delete Employee.
-router.post('/:id/delete', employee.employee_delete_post);
-
-// GET request to update Employee.
-router.get('/:id/update', employee.employee_update_get);
-
-// POST request to update Employee.
-router.post('/:id/update', employee.employee_update_post);
+// PATCH request to update Employee.
+router.patch('/:id/update', employee.employee_update_post);
 
 // GET request for one Employee.
 router.get('/:id', employee.employee_detail);
