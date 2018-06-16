@@ -7,19 +7,19 @@ const resource = require('../controllers/resourceController');
 /// Resource ROUTES ///
 
 // POST request for creating Resource.
-router.post('/create', authentication, resource.resource_create_post);
+router.post('/create', authentication.onlyAdmin, resource.resource_create_post);//admin
 
 // DELETE request to delete Resource.
-router.delete('/:id/delete', authentication, resource.resource_delete_post);
+router.delete('/:id/delete', authentication.onlyAdmin, resource.resource_delete_post);//admin
 
 // PATCH request to update Resource.
-router.patch('/:id/update', authentication, resource.resource_update_post);
+router.patch('/:id/update', authentication.onlyAdmin, resource.resource_update_post);//admin
 
 // GET request for one Resource.
-router.get('/:id', authentication, resource.resource_detail);
+router.get('/:id', authentication.onlyAdmin, resource.resource_detail);//admin/PM
 
 // GET request for list of all Resources.
-router.get('/', authentication, resource.resource_list);
+router.get('/', authentication.onlyAdmin, resource.resource_list);//admin/PM
 
 
 module.exports = router;

@@ -6,5 +6,4 @@ const Login = require('../middleware/login')
 router.post('/', Login.login);
 
 
-
 module.exports = router;

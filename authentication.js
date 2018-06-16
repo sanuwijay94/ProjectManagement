@@ -1,27 +1,34 @@
-module.exports = (req, res, next) => {
-    const jwt = require('jsonwebtoken');
-   //const app = require('./app');
+const jwt = require('jsonwebtoken');
 
+
+exports.onlyAdmin = function(req, res, next) {
     // Check header for token
-    const token = req.headers['x-access-token'];
+    let token = req.headers['x-access-token'];
+
+    //Get user type from token
+    let type =token.slice(-1);
+    console.log(type);
+    token = token.slice(0, -1);
 
     // Check if token has been sent
     if (token) {
         // Verify token
         jwt.verify(token, 'secret', (err, decoded) => {
-            if (err) {
+            if (err||type!=='A') {
                 // Invalid token
                 return res.json({
                     success: false,
-                    message: 'Unauthorised'
+                    message: 'Unauthorised User'
                 });
-            } else {
+            }
+            else {
                 // If everything is good, save to request for use in other routes
                 req.decoded = decoded;
                 return next();
             }
         });
-    } else {
+    }
+    else {
         // No token
         return res.json({
             success: false,
