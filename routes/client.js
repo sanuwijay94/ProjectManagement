@@ -1,25 +1,25 @@
-var express = require('express');
-var router = express.Router();
-
-var client = require('../controllers/clientController');
+const express = require('express');
+const router = express.Router();
+const authentication = require('../authentication');
+const client = require('../controllers/clientController');
 
 
 /// Client ROUTES ///
 
 // POST request for creating Client.
-router.post('/create', client.client_create_post);
+router.post('/create', authentication, client.client_create_post);
 
 // DELETE request to delete Client.
-router.delete('/:id/delete', client.client_delete_post);
+router.delete('/:id/delete', authentication, client.client_delete_post);
 
 // PATCH request to update Client.
-router.patch('/:id/update', client.client_update_post);
+router.patch('/:id/update', authentication, client.client_update_post);
 
 // GET request for one Client.
-router.get('/:id', client.client_detail);
+router.get('/:id', authentication, client.client_detail);
 
 // GET request for list of all Clients.
-router.get('/', client.client_list);
+router.get('/', authentication, client.client_list);
 
 
 module.exports = router;

@@ -65,9 +65,8 @@ exports.project_create_post = function(req, res) {
 
     validate(data, rules)
         .then(() => {
-            const project = new Project({
+            let project = new Project ({
                 name: req.body.name,
-                type: req.body.type,
                 start_date: req.body.start_date,
                 deadline: req.body.deadline,
                 budget: req.body.budget,
@@ -104,7 +103,7 @@ exports.project_create_post = function(req, res) {
                 }
                 return res.json({
                     message: "Created Successfully",
-                    result: result
+                    result: req.body
                 });
             });
         })
