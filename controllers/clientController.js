@@ -71,12 +71,12 @@ exports.client_create_post = function(req, res) {
             });
             client.save(function (err) {
                 if (err) {
-                    return res.json({
+                    return res.status(304).json({
                         message: "Unable to create Client",
                         error: err
                     });
                 }
-                return res.json({
+                return res.status(200).json({
                     message: "Created Successfully",
                     client: client
                 });
@@ -93,7 +93,7 @@ exports.client_delete_post = function(req, res) {
     //Delete Client by passed id
     Client.findByIdAndDelete(req.params.id, function (err, result) {
         if (err||!result) {
-            return res.json.status(304)({
+            return res.status(304).json({
                 message: "Unable to Delete Client",
                 error: err
             });
@@ -103,8 +103,8 @@ exports.client_delete_post = function(req, res) {
             clientMiddleware.projectsOfClient(req.params.id, function(projects) {
                 //delete all the projects of client specified by the passed client Id
                 Project.deleteMany({'client': req.params.id}, function (err, result) {
-                    if (err) {
-                        return res.json({
+                    if (err||!result) {
+                        return res.status.json(304)({
                             message: "Unable to Delete Project",
                             error: err
                         });
@@ -114,8 +114,8 @@ exports.client_delete_post = function(req, res) {
                         for (let j = 0; j < projects.length; j++) {
                             projectMiddleware.phasesOfProject(projects[j], function (phases) {
                                 Phase.deleteMany({'project': projects[j]}, function (err, result) {
-                                    if (err) {
-                                        return res.json({
+                                    if (err||!result) {
+                                        return res.status.json(304)({
                                             message: "Unable to Delete Phases",
                                             error: err
                                         });
@@ -124,8 +124,8 @@ exports.client_delete_post = function(req, res) {
                                         //Delete all the task of each phase
                                         for (let i = 0; i < phases.length; i++) {
                                             Task.deleteMany({'phase': phases[i]}, function (err, result) {
-                                                if (err) {
-                                                    return res.json({
+                                                if (err||!result) {
+                                                    return res.status.json(304)({
                                                         message: "Unable to Delete Task",
                                                         error: err
                                                     });
@@ -138,7 +138,7 @@ exports.client_delete_post = function(req, res) {
                         }
                     }
                 });
-                return res.json({
+                return res.status.json(200)({
                     message: "Deleted Successfully",
                     result: result
                 });
@@ -171,13 +171,13 @@ exports.client_update_post = function(req, res) {
     validate(data, rules)
         .then(() => {
             Client.findByIdAndUpdate(req.params.id, req.body, function (err, result) {
-                if (err) {
-                    return res.json({
+                if (err||!result) {
+                    return res.status(304).json({
                         message: "Unable to update Client",
                         error: err
                     });
                 }
-                return res.json({
+                return res.status(200).json({
                     message: "update Successfully",
                     client: result
                 });

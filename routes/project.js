@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router({mergeParams: true});
 const authentication = require('../authentication');
 const project = require('../controllers/projectController');
+const phase = require('../controllers/phaseController');
+const task = require('../controllers/taskController');
 
 
 /// Project ROUTES ///
@@ -20,6 +22,18 @@ router.get('/:id', authentication.all, project.project_detail);//all
 
 // GET request for list of all Projects.
 router.get('/', authentication.onlyAdmin, project.project_list);//admin
+
+// GET Phases of a Project
+router.get('/:projectId/phases/', phase.getPhases);//all
+
+// GET Phase
+router.get('/:projectId/phases/:id', phase.phase_detail);//all
+
+// GET Tasks of Phase
+router.get('/:projectId/phases/:phaseId/tasks', task.getTasks);//all
+
+//GET Task
+router.get('/:projectId/phases/:phaseId/tasks/:id', task.task_detail);//all
 
 
 module.exports = router;

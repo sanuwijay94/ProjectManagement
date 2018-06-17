@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authentication = require('../authentication');
 const employee = require('../controllers/employeeController');
-
+const project = require('../controllers/projectController');
 
 /// Employee ROUTES ///
 
@@ -21,5 +21,10 @@ router.get('/:id', authentication.onlyAdminAndPM, employee.employee_detail);//ad
 // GET request for list of all Employees.
 router.get('/', authentication.onlyAdminAndPM, employee.employee_list);//admin/PM
 
+// GET projects of Employee
+router.get('/:empId/projects/', authentication.all, project.getEmployeeProjects);
+
+// GET project
+router.get('/:empId/projects/:id', authentication.all, project.project_detail);
 
 module.exports = router;

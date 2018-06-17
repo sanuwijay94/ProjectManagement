@@ -1,12 +1,12 @@
 const Task = require('../models/task');
 const { validate } = require('indicative');
-
+const phaseMiddleware = require('../middleware/phase');
 
 // Display list of all Task.
 exports.task_list = function(req, res) {
     Task.find({}, '_id description employee phase status', function (err, result) {
-        if (err) {
-            return res.json({
+        if (err||!result) {
+            return res.status(404).json({
                 message: "Unable to get all task",
                 error: err
             });
@@ -14,15 +14,15 @@ exports.task_list = function(req, res) {
         else {
             return res.json(result);
         }
-    }).populate('employee phase');
+    }).populate({ path: 'phase', populate: { path: 'project', populate: {path: 'client'} } }).populate('employee');
 };
 
 
 // Display detail page for a specific Task.
 exports.task_detail = function(req, res) {
     Task.findById({'_id': req.params.id}, '_id description employee phase status', function (err, result) {
-        if (err) {
-            return res.json({
+        if (err||!result) {
+            return res.status(404).json({
                 message: "Unable to get the task",
                 error: err
             });
@@ -30,7 +30,7 @@ exports.task_detail = function(req, res) {
         else {
             return res.json(result);
         }
-    }).populate('employee phase');
+    }).populate({ path: 'phase', populate: { path: 'project', populate: {path: 'client'} } }).populate('employee');
 };
 
 
@@ -59,13 +59,13 @@ exports.task_create_post = function(req, res) {
                 status: req.body.status
             });
             task.save(function (err) {
-                if (err) {
-                    return res.json({
+                if (err||!result) {
+                    return res.status(304).json({
                         message: "Unable to Create Task",
                         error: err
                     });
                 }
-                return res.json({
+                return res.status(200).json({
                     message: "Created Successfully",
                     result: task
                 });
@@ -80,14 +80,14 @@ exports.task_create_post = function(req, res) {
 // Task delete on DELETE.
 exports.task_delete_post = function(req, res) {
     Task.findByIdAndDelete(req.params.id, function (err, result) {
-        if (err) {
-            return res.json({
+        if (err||!result) {
+            return res.status(304).json({
                 message: "Unable to Delete Task",
                 error: err
             });
         }
         else{
-            return res.json({
+            return res.status(200).json({
                 message: "Deleted Successfully",
                 result: result
             });
@@ -115,13 +115,13 @@ exports.task_update_post = function(req, res) {
     validate(data, rules)
         .then(() => {
             Task.findByIdAndUpdate(req.params.id, req.body, function (err, result) {
-                if (err) {
-                    return res.json({
+                if (err||!result) {
+                    return res.status(304).json({
                         message: "Unable to Update Task",
                         error: err
                     });
                 }
-                return res.json({
+                return res.status(200).json({
                     message: "Updated Successfully",
                     result: result
                 });
@@ -130,4 +130,21 @@ exports.task_update_post = function(req, res) {
         .catch((errors) => {
             return res.json(errors);
         });
+};
+
+
+//get tasks of phase on GET
+exports.getTasks = function(req, res) {
+    phaseMiddleware.tasksOfPhase(req.params.phaseId, function(tasks) {
+        console.log(tasks);
+        Task.find({'_id':{$in: tasks}}, '_id description phase employee status', function (err, result) {
+            if (err||!result) {
+                return res.status(404).json({
+                    message: "Unable to get all tasks",
+                    error: err
+                });
+            }
+            return res.json(result);
+        }).populate('phase employee');
+    });
 };

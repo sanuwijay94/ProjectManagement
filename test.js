@@ -91,7 +91,7 @@ describe('Tests', function() {
     //delete a specific client
     describe('DELETE /client/:id/delete', function() {
         it('delete a client with it\'s whole projects', function() {
-            var client_delete = chakram.delete("http://127.0.0.1:3000/client/5b2611ecac31352dbc43754d/delete", {}, {
+            var client_delete = chakram.delete("http://127.0.0.1:3000/client/5b261a26ac31352dbc437552/delete", {}, {
                 headers: {
                     'x-access-token': token
                 }

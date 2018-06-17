@@ -6,8 +6,8 @@ const { validate } = require('indicative');
 // Display list of all Resource.
 exports.resource_list = function(req, res) {
     Resource.find({}, '_id status name type', function (err, result) {
-        if (err) {
-            return res.json({
+        if (err||!result) {
+            return res.status(404).json({
                 message: "Unable to get all resources",
                 error: err
             });
@@ -22,8 +22,8 @@ exports.resource_list = function(req, res) {
 // Display detail page for a specific Resource.
 exports.resource_detail = function(req, res) {
     Resource.findById({'_id': req.params.id}, '_id status name type', function (err, result) {
-        if (err) {
-            return res.json({
+        if (err||!result) {
+            return res.status(404).json({
                 message: "Unable to get the resource",
                 error: err
             });
@@ -57,13 +57,13 @@ exports.resource_create_post = function(req, res) {
                 status: req.body.status
             });
             resource.save(function (err) {
-                if (err) {
-                    return res.json({
+                if (err||!result) {
+                    return res.status(304).json({
                         message: "Unable to Create Project",
                         error: err
                     });
                 }
-                return res.json({
+                return res.status(200).json({
                     message: "Created Successfully",
                     result: resource
                 });
@@ -78,16 +78,16 @@ exports.resource_create_post = function(req, res) {
 // Resource delete on DELETE.
 exports.resource_delete_post = function(req, res) {
     Resource.findByIdAndDelete(req.params.id, function (err, result) {
-        if (err) {
-            return res.json({
+        if (err||!result) {
+            return res.status(304).json({
                 message: "Unable to Delete Resource",
                 error: err
             });
         }
         //getting all the projects of resources
         resourceMiddleware.projectsOfResource(req.params.id, function(projects) {
-            if (err) {
-                return res.json({
+            if (err||!result) {
+                return res.status(304).json({
                     message: "Unable to Delete Project",
                     error: err
                 });
@@ -96,7 +96,7 @@ exports.resource_delete_post = function(req, res) {
             for(let i=0; i<projects.length; i++) {
                 resourceMiddleware.deleteResourceFromProject(projects, req.params.id);
             }
-            return res.json({
+            return res.status(200).json({
                 message: "Deleted Successfully",
             });
         });
@@ -121,13 +121,13 @@ exports.resource_update_post = function(req, res) {
     validate(data, rules)
         .then(() => {
             Resource.findByIdAndUpdate(req.params.id, req.body, function (err, result) {
-                if (err) {
-                    return res.json({
+                if (err||!result) {
+                    return res.status(304).json({
                         message: "Unable to Update Project",
                         error: err
                     });
                 }
-                return res.json({
+                return res.status(200).json({
                     message: "Updated Successfully",
                     result: result
                 });

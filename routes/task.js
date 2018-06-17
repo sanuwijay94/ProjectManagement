@@ -21,11 +21,5 @@ router.get('/:id', authentication.all, task.task_detail);//all
 // GET request for list of all Tasks.
 router.get('/', authentication.onlyAdmin, task.task_list);//admin/PM
 
-//router.get('/projects/', phase.getProjects)
-//router.get('/projects/:projectId/', project.getProject)
-//router.get('/projects/:projectId/phases/', phase.getPhases)
-//router.get('/projects/:projectId/phases/:phaseId', phase.getPhase)
-//router.get('/projects/:projectId/phase/:phaseId/tasks', task.getTasks)
-//router.get('/projects/:projectId/phase/:phaseId/tasks/:taskId', task.getTask)
 
 module.exports = router;

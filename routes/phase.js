@@ -22,4 +22,6 @@ router.get('/:id', authentication.all, phase.phase_detail);//all
 router.get('/', authentication.onlyAdminAndPM, phase.phase_list);//admin/PM
 
 
+
+
 module.exports = router;

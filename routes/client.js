@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authentication = require('../authentication');
 const client = require('../controllers/clientController');
+const project = require('../controllers/projectController');
 
 
 /// Client ROUTES ///
@@ -21,5 +22,10 @@ router.get('/:id', authentication.onlyAdminAndPM, client.client_detail);//admin/
 // GET request for list of all Clients.
 router.get('/', authentication.onlyAdminAndPM, client.client_list);//admin/PM
 
+// GET projects of Client
+router.get('/:clientId/projects/', authentication.all, project.getClientProjects);//all
+
+// GET project
+router.get('/:clientId/projects/:id', authentication.all, project.project_detail);//all
 
 module.exports = router;

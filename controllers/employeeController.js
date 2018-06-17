@@ -1,5 +1,4 @@
 const Employee = require('../models/employee');
-const Project = require('../models/project');
 const employeeMiddleware = require('../middleware/employee');
 const { validate } = require('indicative');
 
@@ -76,12 +75,12 @@ exports.employee_create_post = function(req, res) {
             });
             employee.save(function (err) {
                 if (err) {
-                    return res.json({
+                    return res.status(304).json({
                         message: "Unable to Create Client",
                         error: err
                     });
                 }
-                return res.json({
+                return res.status(200).json({
                     message: "Created Successfully",
                     result: req.body
                 });
@@ -96,16 +95,16 @@ exports.employee_create_post = function(req, res) {
 // Project delete on DELETE.
 exports.employee_delete_post = function(req, res) {
     Employee.findByIdAndDelete(req.params.id, function (err, result) {
-        if (err) {
-            return res.json({
+        if (err||!result) {
+            return res.status(304).json({
                 message: "Unable to Delete Employee",
                 error: err
             });
         }
         //getting all the projects of employee with the passed employee Id
         employeeMiddleware.projectsOfEmployee(req.params.id, function(projects) {
-            if (err) {
-                return res.json({
+            if (err||!result) {
+                return res.status(304).json({
                     message: "Unable to Delete Project",
                     error: err
                 });
@@ -114,7 +113,7 @@ exports.employee_delete_post = function(req, res) {
             for(let i=0; i<projects.length; i++) {
                 employeeMiddleware.deleteEmployeeFromProject(projects[i], req.params.id);
             }
-            return res.json({
+            return res.status(200).json({
                 message: "Deleted Successfully",
             });
         });
@@ -151,13 +150,13 @@ exports.employee_update_post = function(req, res) {
     validate(data, rules)
         .then(() => {
             Employee.findByIdAndUpdate(req.params.id, req.body, function (err, result) {
-                if (err) {
-                    return res.json({
+                if (err||!result) {
+                    return res.status(304).json({
                         message: "Unable to update Client",
                         error: err
                     });
                 }
-                return res.json({
+                return res.status(200).json({
                     message: "Updated Successfully",
                     result: result
                 });
@@ -167,3 +166,4 @@ exports.employee_update_post = function(req, res) {
             return res.json(errors);
         });
 };
+

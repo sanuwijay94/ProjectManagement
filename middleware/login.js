@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const Client = require('../models/client');
 const Employee = require('../models/employee');
 const Admin = require('../models/admin');
+const Project = require('../models/project');
+const employeeMiddleware = require('../middleware/employee');
 
 foundUser=function(req, res, user){
     // Wrong password
@@ -54,26 +56,27 @@ foundUser=function(req, res, user){
                 return res.json({
                     error: 'User type not found',
                 });
-
         }
+        //console.log(result);
         return res.json({
             success: true,
             message: 'Successfully logged in',
-            token: token
+            token: token,
+            user: user
         });
     }
 };
 
 
 exports.login = function(req, res) {
-    Client.findOne({username: req.body.username},'name email type username password ', function (err, client) {
+    Client.findOne({username: req.body.username},'_id name email type username password ', function (err, client) {
         if (err || !client) {
-            Employee.findOne({username: req.body.username}, 'first_name email type username password ', function (err, employee) {
+            Employee.findOne({username: req.body.username}, '_id first_name email type username password ', function (err, employee) {
                 if (err || !employee) {
-                    Admin.findOne({username: req.body.username}, 'username password type ', function (err, admin){
+                    Admin.findOne({username: req.body.username}, '_id username password type ', function (err, admin){
                         //User not found
                         if (err || !admin) {
-                            return res.json({
+                            return res.status(401).json({
                                 error: 'User not found',
                                 err: err
                             });
