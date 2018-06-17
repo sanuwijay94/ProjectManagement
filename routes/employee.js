@@ -13,13 +13,13 @@ router.post('/create', authentication.onlyAdmin, employee.employee_create_post);
 router.delete('/:id/delete', authentication.onlyAdmin, employee.employee_delete_post);//admin
 
 // PATCH request to update Employee.
-router.patch('/:id/update', authentication.onlyAdmin, employee.employee_update_post);//all
+router.patch('/:id/update', authentication.onlyAdmin, employee.employee_update_post);//admin
 
 // GET request for one Employee.
-router.get('/:id', authentication.onlyAdmin, employee.employee_detail);//admin/PM
+router.get('/:id', authentication.onlyAdminAndPM, employee.employee_detail);//admin/PM
 
 // GET request for list of all Employees.
-router.get('/', authentication.onlyAdmin, employee.employee_list);//admin/PM
+router.get('/', authentication.onlyAdminAndPM, employee.employee_list);//admin/PM
 
 
 module.exports = router;

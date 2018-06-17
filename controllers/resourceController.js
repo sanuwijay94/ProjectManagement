@@ -92,11 +92,12 @@ exports.resource_delete_post = function(req, res) {
                     error: err
                 });
             }
-            // deleting resources from project
-            let newResourceArray = resourceMiddleware.deleteResourceFromProject(projects, req.params.id);
+            // deleting resources from project all the project
+            for(let i=0; i<projects.length; i++) {
+                resourceMiddleware.deleteResourceFromProject(projects, req.params.id);
+            }
             return res.json({
                 message: "Deleted Successfully",
-                result: [newResourceArray]
             });
         });
     });

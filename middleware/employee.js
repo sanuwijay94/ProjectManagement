@@ -21,7 +21,7 @@ module.exports.deleteEmployeeFromProject = function(projId, empId) {
 
 module.exports.projectsOfEmployee = function(empId, callback){
     let projects = [];
-    Project.find({'employees': [empId]}, '_id', function (err, result) {
+    Project.find({'employees': empId}, '_id', function (err, result) {
         if (err) {
             return json(err);
         }

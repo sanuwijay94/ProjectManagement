@@ -19,12 +19,12 @@ foundUser=function(req, res, user){
         };
         // Create token
         let token = jwt.sign(tokenDetails, 'secret', {
-            expiresIn: '10m'
+            expiresIn: '50m'
         });
         //add user type for the token
         switch(user.type) {
             case 'PM':
-                token = token+'M';
+                token = token+'P';
                 console.log('PM');
                 break;
             case 'Dev':
@@ -45,9 +45,16 @@ foundUser=function(req, res, user){
                 token = token+'C';
                 console.log('Client');
                 break;
-            default:
+            case 'admin':
                 token = token+'A';
                 console.log('Admin');
+                break;
+            default:
+                console.log('no type');
+                return res.json({
+                    error: 'User type not found',
+                });
+
         }
         return res.json({
             success: true,
@@ -63,7 +70,7 @@ exports.login = function(req, res) {
         if (err || !client) {
             Employee.findOne({username: req.body.username}, 'first_name email type username password ', function (err, employee) {
                 if (err || !employee) {
-                    Admin.findOne({username: req.body.username}, 'username password ', function (err, admin){
+                    Admin.findOne({username: req.body.username}, 'username password type ', function (err, admin){
                         //User not found
                         if (err || !admin) {
                             return res.json({

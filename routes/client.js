@@ -16,10 +16,10 @@ router.delete('/:id/delete', authentication.onlyAdmin, client.client_delete_post
 router.patch('/:id/update', authentication.onlyAdmin, client.client_update_post);// admin
 
 // GET request for one Client.
-router.get('/:id', authentication.onlyAdmin, client.client_detail);//admin/PM/BA
+router.get('/:id', authentication.onlyAdminAndPM, client.client_detail);//admin/PM
 
 // GET request for list of all Clients.
-router.get('/', authentication.onlyAdmin, client.client_list);//admin/PM/BA
+router.get('/', authentication.onlyAdminAndPM, client.client_list);//admin/PM
 
 
 module.exports = router;

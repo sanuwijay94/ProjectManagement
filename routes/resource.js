@@ -16,10 +16,10 @@ router.delete('/:id/delete', authentication.onlyAdmin, resource.resource_delete_
 router.patch('/:id/update', authentication.onlyAdmin, resource.resource_update_post);//admin
 
 // GET request for one Resource.
-router.get('/:id', authentication.onlyAdmin, resource.resource_detail);//admin/PM
+router.get('/:id', authentication.onlyAdminAndPM, resource.resource_detail);//admin/PM
 
 // GET request for list of all Resources.
-router.get('/', authentication.onlyAdmin, resource.resource_list);//admin/PM
+router.get('/', authentication.onlyAdminAndPM, resource.resource_list);//admin/PM
 
 
 module.exports = router;

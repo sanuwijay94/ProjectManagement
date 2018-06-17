@@ -92,8 +92,8 @@ exports.client_create_post = function(req, res) {
 exports.client_delete_post = function(req, res) {
     //Delete Client by passed id
     Client.findByIdAndDelete(req.params.id, function (err, result) {
-        if (err) {
-            return res.json({
+        if (err||!result) {
+            return res.json.status(304)({
                 message: "Unable to Delete Client",
                 error: err
             });

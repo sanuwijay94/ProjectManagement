@@ -112,12 +112,11 @@ exports.employee_delete_post = function(req, res) {
             }
             //delete the employee Id from all the project
             for(let i=0; i<projects.length; i++) {
-                let newEmployeeArray = employeeMiddleware.deleteEmployeeFromProject(projects[i], req.params.id);
-                return res.json({
-                    message: "Deleted Successfully",
-                    result: [newEmployeeArray]
-                });
+                employeeMiddleware.deleteEmployeeFromProject(projects[i], req.params.id);
             }
+            return res.json({
+                message: "Deleted Successfully",
+            });
         });
     });
 };

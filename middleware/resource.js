@@ -21,7 +21,7 @@ module.exports.deleteResourceFromProject = function(projId, resourceId) {
 
 module.exports.projectsOfResource = function(resourceId, callback){
     let projects = [];
-    Project.find({'resources': [resourceId]}, '_id', function (err, result) {
+    Project.find({'resources': resourceId}, '_id', function (err, result) {
         if (err) {
             return json(err);
         }

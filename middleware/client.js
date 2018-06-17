@@ -2,7 +2,6 @@ const Project = require('../models/project');
 
 
 module.exports.projectsOfClient = function(clientId, callback) {
-    console.log('method');
     var projects = [];
     Project.find({'client': clientId}, '_id', function (err, result) {
         if (err) {
