@@ -7,11 +7,11 @@
 var app = require('../app');
 var debug = require('debug')('project:server');
 var http = require('http');
-
+const cors = require('cors');
 /**
  * Get port from environment and store in Express.
  */
-
+app.use(cors());
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 

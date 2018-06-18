@@ -12,9 +12,11 @@ var resource = require('./routes/resource');
 var project = require('./routes/project');
 var phase = require('./routes/phase');
 var task = require('./routes/task');
+const cors = require('cors');
 
 var app = express();
 
+app.use(cors());
 //Set up mongoose connection
 var mongoose = require('mongoose');
 var mongoDB = 'mongodb://127.0.0.1:27017/projectManagement';

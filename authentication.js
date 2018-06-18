@@ -91,7 +91,6 @@ exports.all = function(req, res, next) {
         jwt.verify(token, 'secret', (err, decoded) => {
             if (err) {
                 // Invalid token
-                console.log('errrrrrr');
                 return res.status(403).json({
                     success: false,
                     message: 'Unauthorised User'
@@ -106,8 +105,7 @@ exports.all = function(req, res, next) {
     }
     else {
         // No token
-        console.log('else');
-        return res.status(403).json({
+        return res.status(401).json({
             success: false,
             message: 'Unauthorised'
         });
