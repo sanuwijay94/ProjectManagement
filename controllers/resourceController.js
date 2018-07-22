@@ -13,7 +13,7 @@ exports.resource_list = function(req, res) {
             });
         }
         else {
-            return res.json(result);
+            return res.status(200).json(result);
         }
     });
 };
@@ -29,7 +29,7 @@ exports.resource_detail = function(req, res) {
             });
         }
         else {
-            return res.json(result);
+            return res.status(200).json(result);
         }
     });
 };
@@ -57,13 +57,13 @@ exports.resource_create_post = function(req, res) {
                 status: req.body.status
             });
             resource.save(function (err) {
-                if (err||!result) {
+                if (err) {
                     return res.status(304).json({
                         message: "Unable to Create Project",
                         error: err
                     });
                 }
-                return res.status(200).json({
+                return res.status(201).json({
                     message: "Created Successfully",
                     result: resource
                 });

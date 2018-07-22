@@ -13,7 +13,7 @@ exports.phase_list = function(req, res) {
             });
         }
         else {
-            return res.json(result);
+            return res.status(200).json(result);
         }
     }).populate('project');
 };
@@ -29,7 +29,7 @@ exports.phase_detail = function(req, res) {
             });
         }
         else {
-            return res.json(result);
+            return res.status(200).json(result);
         }
     }).populate('project');
 };
@@ -60,14 +60,15 @@ exports.phase_create_post = function(req, res) {
                 project: req.body.project
             });
             phase.save(function (err) {
-                if (err||!result) {
+                if (err) {
                     return res.status(304).json({
                         message: "Unable to Create Task",
                         error: err
                     });
                 }
-                return res.status(200).json({
-                    message: "Created Successfully"
+                return res.status(201).json({
+                    message: "Created Successfully",
+                    result: phase
                 });
             });
         })
@@ -145,8 +146,6 @@ exports.phase_update_post = function(req, res) {
 // get phases of project on GET
 exports.getPhases = function(req, res) {
     projectMiddleware.phasesOfProject(req.params.projectId, function(phases) {
-        console.log(phases);
-
         Phase.find({'_id': {$in: phases}}, '_id name type start_date end_date project', function (err, result) {
             if (err||!result) {
                 return res.status(404).json({
@@ -154,7 +153,7 @@ exports.getPhases = function(req, res) {
                     error: err
                 });
             }
-            return res.json(result);
+            return res.status(200).json(result);
         }).populate('project');
     });
 };

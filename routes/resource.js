@@ -19,7 +19,7 @@ router.patch('/:id/update', authentication.onlyAdmin, resource.resource_update_p
 router.get('/:id', authentication.onlyAdminAndPM, resource.resource_detail);//admin/PM
 
 // GET request for list of all Resources.
-router.get('/', authentication.onlyAdminAndPM, resource.resource_list);//admin/PM
+router.get('/', /*authentication.onlyAdminAndPM,*/ resource.resource_list);//admin/PM
 
 
 module.exports = router;

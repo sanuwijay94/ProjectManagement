@@ -2,8 +2,6 @@ const jwt = require('jsonwebtoken');
 const Client = require('../models/client');
 const Employee = require('../models/employee');
 const Admin = require('../models/admin');
-const Project = require('../models/project');
-const employeeMiddleware = require('../middleware/employee');
 
 foundUser=function(req, res, user){
     // Wrong password
@@ -77,8 +75,8 @@ exports.login = function(req, res) {
                         //User not found
                         if (err || !admin) {
                             return res.status(401).json({
-                                error: 'User not found',
-                                err: err
+                                success: false,
+                                error: 'User not found'
                             });
                         }
                         else {

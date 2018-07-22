@@ -11,13 +11,13 @@ const { validate } = require('indicative');
 exports.client_list = function(req, res) {
     Client.find({}, '_id name type phone email username password', function (err, result) {
         if (err) {
-            return res.json({
+            return res.status(404).json({
                 message: "Unable to get all clients",
                 error: err
             });
         }
         else {
-            return res.json(result);
+            return res.status(200).json(result);
         }
     });
 };
@@ -27,13 +27,13 @@ exports.client_list = function(req, res) {
 exports.client_detail = function(req, res) {
     Client.findById({'_id': req.params.id}, '_id name type phone email username password', function (err, result) {
         if (err) {
-            return res.json({
+            return res.status(404).json({
                 message: "Unable to get the client",
                 error: err
             });
         }
         else {
-            return res.json(result);
+            return res.status(200).json(result);
         }
     });
 };
@@ -76,7 +76,7 @@ exports.client_create_post = function(req, res) {
                         error: err
                     });
                 }
-                return res.status(200).json({
+                return res.status(201).json({
                     message: "Created Successfully",
                     client: client
                 });
@@ -138,7 +138,7 @@ exports.client_delete_post = function(req, res) {
                         }
                     }
                 });
-                return res.status.json(200)({
+                return res.status(200).json({
                     message: "Deleted Successfully",
                     result: result
                 });

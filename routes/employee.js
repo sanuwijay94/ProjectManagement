@@ -22,9 +22,9 @@ router.get('/:id', authentication.onlyAdminAndPM, employee.employee_detail);//ad
 router.get('/', authentication.onlyAdminAndPM, employee.employee_list);//admin/PM
 
 // GET projects of Employee
-router.get('/:empId/projects/', authentication.all, project.getEmployeeProjects);
+router.get('/:empId/projects/', /*authentication.all,*/ project.getEmployeeProjects);//all
 
 // GET project
-router.get('/:empId/projects/:id', authentication.all, project.project_detail);
+router.get('/:empId/projects/:id', authentication.all, project.project_detail);//all
 
 module.exports = router;

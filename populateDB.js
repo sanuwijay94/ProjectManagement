@@ -14,7 +14,9 @@ const Resource = require('./models/resource');
 const Client = require('./models/client');
 const Phase = require('./models/phase');
 const Task = require('./models/task');
-const Admin = require('./models/task');
+const Admin = require('./models/admin');
+
+
 
 const mongoose = require('mongoose');
 const mongoDB = userArgs[0];
@@ -38,22 +40,41 @@ function projectCreate(cb) {
         budget: 45000,
         percentage_complete: 40.5,
         client: clients[0],
-        employees: [employees[0]],
-        resources: [resources[0]]
+        employees: employees,
+        resources: resources
     });
-
+    const project1 = new Project({
+        name: 'Crop Management',
+        type: 'Agriculture',
+        start_date: '2017-11-16',
+        deadline: '2018-07-22',
+        budget: 85000,
+        percentage_complete: 25.5,
+        client: clients[1],
+        employees: [],
+        resources: []
+    });
     project.save( function (err)
     {
         if (err) {
             cb('project', null);
             return;
         }
-        console.log('New Project: ' + project);
-        projects.push(project)
-        cb(null, project)
+        project1.save( function (err)
+        {
+            if (err) {
+                cb('project1', null);
+                return;
+            }
+            console.log('New Project1: ' + project1);
+            projects.push(project);
+            console.log('New Project2: ' + project);
+            projects.push(project1);
+            cb(null, project)
+        });
+
     })
 }
-
 function employeeCreate(cb) {
     const employee = new Employee({
         first_name: 'sanura',
@@ -62,24 +83,47 @@ function employeeCreate(cb) {
         phone: '0771234563',
         email: 'sanura@gmail.com',
         type: 'Dev',
-        status: 'Available',
+        status: 'Not-Available',
         username: 'sanuwijay94',
         password: '123'
     });
-
+    const employee1 = new Employee({
+        first_name: 'dinura',
+        last_name: 'wijayarathne',
+        date_of_birth: '',
+        phone: '077193745',
+        email: 'dinura@gmail.com',
+        type: 'PM',
+        status: 'Not-Available',
+        username: 'dinur-el',
+        password: 'dinu'
+    });
     employee.save(function (err) {
         if (err) {
-            cb('employee', null);
+            cb('employee1', null);
             return;
         }
-        console.log('New Employee: ' + employee);
-        employees.push(employee);
-        cb(null, employee);
-    }   );
+        employee1.save(function (err) {
+            if (err) {
+                cb('employee2', null);
+                return;
+            }
+            console.log('New Employee1: ' + employee1);
+            employees.push(employee1);
+            console.log('New Employee2: ' + employee);
+            employees.push(employee);
+            cb(null, employee);
+        });
+    });
 }
 
 function resourceCreate(cb) {
     const resource = new Resource({
+        name: 'server',
+        type: 'facilities',
+        status: 'Not-Available'
+    });
+    const resource1 = new Resource({
         name: 'server',
         type: 'facilities',
         status: 'Available'
@@ -89,10 +133,18 @@ function resourceCreate(cb) {
             cb('resource', null);
             return
         }
-        console.log('New Resource ' + resource);
-        resources.push(resource);
-        cb(null, resource);
-    }  );
+        resource1.save(function (err) {
+            if (err) {
+                cb('resource1', null);
+                return
+            }
+            console.log('New Resource1 ' + resource1);
+            resources.push(resource1);
+            console.log('New Resource2' + resource);
+            resources.push(resource);
+            cb(null, resource);
+        });
+    });
 }
 
 
@@ -105,15 +157,31 @@ function clientCreate(cb) {
         username: 'WHO2018',
         password: 'who123'
     });
+    const client1 = new Client({
+        name: 'Christiano Ronaldo',
+        type: 'Person',
+        phone: '0729322232',
+        email: 'ronaldo@gmail.com',
+        username: 'ronaldo',
+        password: '07'
+    });
     client.save(function (err) {
         if (err) {
-            cb('client', null);
+            cb('client1', null);
             return
         }
-        console.log('New Client: ' + client);
-        clients.push(client);
-        cb(null, client);
-    }  );
+        client1.save(function (err) {
+            if (err) {
+                cb('client2', null);
+                return
+            }
+            console.log('New Client1: ' + client);
+            clients.push(client);
+            console.log('New Client2: ' + client1);
+            clients.push(client1);
+            cb(null, client);
+        });
+    });
 }
 
 
@@ -124,38 +192,79 @@ function phaseCreate(cb) {
         end_date: '',
         project: projects[0]
     });
+    const phase1 = new Phase({
+        name: 'Requirement analysis',
+        start_date: '2017-08-06',
+        end_date: '',
+        project: projects[0]
+    });
     phase.save(function (err) {
         if (err) {
             cb('phase', null);
             return
         }
-        console.log('New Phase ' + phase);
-        phases.push(phase);
-        cb(null, phase)
-    }  );
+        phase1.save(function (err) {
+            if (err) {
+                cb('phase1', null);
+                return
+            }
+            console.log('New Phase1 ' + phase);
+            phases.push(phase);
+            console.log('New Phase2 ' + phase1);
+            phases.push(phase1);
+            cb(null, phase)
+        });
+
+    });
 }
 
 
 function taskCreate(cb) {
     const task = new Task({
-        description: 'Create Models ',
+        description: 'Create Models',
         employee: employees[0],
         phase: phases[0],
+        status: 'completed'
+    });
+    const task1 = new Task({
+        description: 'Create login UI',
+        employee: employees[1],
+        phase: phases[0],
+        status: 'on-going'
+    });
+    const task2 = new Task({
+        description: 'Create registration',
+        employee: employees[0],
+        phase: phases[1],
         status: 'on-going'
     });
     task.save(function (err) {
         if (err) {
-            cb('task', null);
+            cb('task1', null);
             return
         }
-        console.log('New Task ' + task);
-        tasks.push(task);
-        cb(null, task)
-    }  );
+        task1.save(function (err) {
+            if (err) {
+                cb('task2', null);
+                return
+            }
+            task2.save(function (err) {
+                if (err) {
+                    cb('task3', null);
+                    return
+                }
+                console.log('New Task1 ' + task);
+                console.log('New Task2 ' + task1);
+                console.log('New Task3 ' + task2);
+                cb(null, task)
+            });
+        });
+    });
 }
 
 
 function adminCreate(cb) {
+    console.log('admin create');
     const admin = new Admin({
         username: 'admin',
         password: 'admin',
@@ -167,9 +276,8 @@ function adminCreate(cb) {
             return
         }
         console.log('New Admin: ' + admin);
-        admin.push(admin);
         cb(null, admin);
-    }  );
+    });
 }
 
 
@@ -202,7 +310,7 @@ function createProject(cb) {
     cb);
 }
 
-function createBookPhase(cb) {
+function createPhase(cb) {
     async.parallel([
             function(callback) {
                 phaseCreate(callback);
@@ -226,7 +334,7 @@ function createTask(cb) {
 async.series([
         createEmployeeClientResourceAdmin,
         createProject,
-        createBookPhase,
+        createPhase,
         createTask
     ],
 // Optional callback
@@ -236,7 +344,6 @@ async.series([
         }
         else {
             console.log('All done');
-
         }
         // All done, disconnect from database
         mongoose.connection.close();

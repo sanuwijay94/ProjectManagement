@@ -21,19 +21,19 @@ router.patch('/:id/update', authentication.onlyAdminAndPM, project.project_updat
 router.get('/:id', authentication.all, project.project_detail);//all
 
 // GET request for list of all Projects.
-router.get('/', authentication.onlyAdmin, project.project_list);//admin
+router.get('/',/* authentication.onlyAdmin,*/ project.project_list);//admin
 
 // GET Phases of a Project
-router.get('/:projectId/phases/', phase.getPhases);//all
+router.get('/:projectId/phases/', /*authentication.all,*/ phase.getPhases);//all
 
 // GET Phase
-router.get('/:projectId/phases/:id', phase.phase_detail);//all
+router.get('/:projectId/phases/:id', authentication.all, phase.phase_detail);//all
 
 // GET Tasks of Phase
-router.get('/:projectId/phases/:phaseId/tasks', task.getTasks);//all
+router.get('/:projectId/phases/:phaseId/tasks', /*authentication.all,*/ task.getTasks);//all
 
 //GET Task
-router.get('/:projectId/phases/:phaseId/tasks/:id', task.task_detail);//all
+router.get('/:projectId/phases/:phaseId/tasks/:id', authentication.all, task.task_detail);//all
 
 
 module.exports = router;

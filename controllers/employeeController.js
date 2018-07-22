@@ -80,7 +80,7 @@ exports.employee_create_post = function(req, res) {
                         error: err
                     });
                 }
-                return res.status(200).json({
+                return res.status(201).json({
                     message: "Created Successfully",
                     result: req.body
                 });

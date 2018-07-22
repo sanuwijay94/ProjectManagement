@@ -12,7 +12,7 @@ exports.task_list = function(req, res) {
             });
         }
         else {
-            return res.json(result);
+            return res.status(200).json(result);
         }
     }).populate({ path: 'phase', populate: { path: 'project', populate: {path: 'client'} } }).populate('employee');
 };
@@ -28,7 +28,7 @@ exports.task_detail = function(req, res) {
             });
         }
         else {
-            return res.json(result);
+            return res.status(200).json(result);
         }
     }).populate({ path: 'phase', populate: { path: 'project', populate: {path: 'client'} } }).populate('employee');
 };
@@ -59,13 +59,13 @@ exports.task_create_post = function(req, res) {
                 status: req.body.status
             });
             task.save(function (err) {
-                if (err||!result) {
+                if (err) {
                     return res.status(304).json({
                         message: "Unable to Create Task",
                         error: err
                     });
                 }
-                return res.status(200).json({
+                return res.status(201).json({
                     message: "Created Successfully",
                     result: task
                 });
@@ -144,7 +144,7 @@ exports.getTasks = function(req, res) {
                     error: err
                 });
             }
-            return res.json(result);
+            return res.status(200).json(result);
         }).populate('phase employee');
     });
 };

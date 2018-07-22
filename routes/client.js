@@ -20,7 +20,7 @@ router.patch('/:id/update', authentication.onlyAdmin, client.client_update_post)
 router.get('/:id', authentication.onlyAdminAndPM, client.client_detail);//admin/PM
 
 // GET request for list of all Clients.
-router.get('/', authentication.onlyAdminAndPM, client.client_list);//admin/PM
+router.get('/', /*authentication.onlyAdminAndPM,*/ client.client_list);//admin/PM
 
 // GET projects of Client
 router.get('/:clientId/projects/', authentication.all, project.getClientProjects);//all

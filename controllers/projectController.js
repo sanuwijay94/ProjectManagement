@@ -19,7 +19,7 @@ exports.project_list = function(req, res) {
             });
         }
         else {
-            return res.json(result);
+            return res.status(200).json(result);
         }
     }).populate('client employees resources');
 };
@@ -35,7 +35,7 @@ exports.project_detail = function(req, res) {
             });
         }
         else {
-            return res.json(result);
+            return res.status(200).json(result);
         }
     }).populate('client employees resources');
 };
@@ -79,7 +79,10 @@ exports.project_create_post = function(req, res) {
             });
             project.save(function (err) {
                 if (err) {
-                    return res.json({err});
+                    return res.status(304).json({
+                        message: "Unable to create project",
+                        error: err
+                    });
                 }
                 //Changing employees status to 'Not-Available' when added to a project
                 for(let i=0;i<req.body.employees.length;i++) {
@@ -103,7 +106,7 @@ exports.project_create_post = function(req, res) {
                         }
                     });
                 }
-                return res.status(200).json({
+                return res.status(201).json({
                     message: "Created Successfully",
                     result: req.body
                 });
@@ -236,7 +239,7 @@ exports.getEmployeeProjects = function(req, res) {
                     error: err
                 });
             }
-            return res.json(result);
+            return res.status(200).json(result);
         }).populate('client employees resources');
     });
 };
@@ -252,7 +255,7 @@ exports.getClientProjects = function(req, res) {
                     error: err
                 });
             }
-            return res.json(result);
+            return res.status(200).json(result);
         }).populate('client employees resources');
     });
 };

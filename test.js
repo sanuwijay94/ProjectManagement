@@ -21,7 +21,7 @@ describe('Tests', function() {
     describe('GET /task/:id', function() {
 
         it('returns a specific task', function() {
-             let getTask = chakram.get("http://127.0.0.1:3000/task/5b160877dca37e23d8646dda", {
+             let getTask = chakram.get("http://127.0.0.1:3000/task/5b370ca3fe1afd3bb815d555", {
                  headers: {
                      'x-access-token': token
                  }
@@ -46,7 +46,7 @@ describe('Tests', function() {
     describe('POST /project/create', function() {
         it('create a project', function () {
             let project = {
-                employees: ['5b181a64be2d3019805b8549', '5b1b73263180d515844fe443'],
+                employees: ['5b370ca2fe1afd3bb815d54b'],
                 resources: [],
                 name: 'Airline Ticketing',
                 type: 'Travel',
@@ -54,7 +54,7 @@ describe('Tests', function() {
                 deadline: '2018-05-11T00:00:00.000Z',
                 budget: 100000,
                 percentage_complete: 78,
-                client: '5b1a155d7f59b2323843063f'
+                client: '5b370ca2fe1afd3bb815d54d'
             };
 
             let project_post = chakram.post("http://127.0.0.1:3000/project/create", project, {
@@ -62,7 +62,7 @@ describe('Tests', function() {
                     'x-access-token': token
                 }
             });
-            return expect(project_post).to.have.status(200);
+            return expect(project_post).to.have.status(201);
         });
     });
 
@@ -80,7 +80,7 @@ describe('Tests', function() {
             password: 'asdfg'
         };
         it('update an employee', function () {
-            var employee_patch = chakram.patch("http://127.0.0.1:3000/employee/5b1b73263180d515844fe443/update", employee, {
+            var employee_patch = chakram.patch("http://127.0.0.1:3000/employee/5b370ca2fe1afd3bb815d54b/update", employee, {
                 headers: {
                     'x-access-token': token
                 }
@@ -91,7 +91,7 @@ describe('Tests', function() {
     //delete a specific client
     describe('DELETE /client/:id/delete', function() {
         it('delete a client with it\'s whole projects', function() {
-            var client_delete = chakram.delete("http://127.0.0.1:3000/client/5b261a26ac31352dbc437552/delete", {}, {
+            var client_delete = chakram.delete("http://127.0.0.1:3000/client/5b370ca2fe1afd3bb815d54d/delete", {}, {
                 headers: {
                     'x-access-token': token
                 }

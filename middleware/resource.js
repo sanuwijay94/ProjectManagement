@@ -4,7 +4,7 @@ const Project = require('../models/project');
 module.exports.deleteResourceFromProject = function(projId, resourceId) {
     Project.findById({'_id': projId}, 'resources', function (err, result) {
         if (err) {
-            return json(err);
+            return err;
         }
         const index = result['resources'].indexOf(resourceId);
         if (index !== -1) {

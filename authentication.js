@@ -53,7 +53,6 @@ exports.onlyAdminAndPM = function(req, res, next) {
         jwt.verify(token, 'secret', (err, decoded) => {
             if (err||(type!=='A'&&type!=='P')) {
                 // Invalid token
-                console.log('errrrrrr');
                 return res.status(403).json({
                     success: false,
                     message: 'Unauthorised User'
